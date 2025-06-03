@@ -232,7 +232,6 @@ function template_preprocess_views_view_mosaic_grid(&$vars) {
   if (empty($image_fields)) {
     return;
   }
-
   // Iterate over the array of rendered fields.
   foreach ($style_plugin->rendered_field_values as $row_index => $row_data) {
     // Iterate over image fields.
@@ -277,13 +276,15 @@ function template_preprocess_views_view_mosaic_grid(&$vars) {
               if (!empty($style_plugin->rendered_field_values[$row_index][$caption_source])) {
                 $text_field_rendered = $style_plugin->rendered_field_values[$row_index][$caption_source];
                 if (!is_array($text_field_rendered)) {
-                  // For single value make it an array with one value. That way if
-                  // multi value image field has single value text field as a text source,
-                  // then only the first image of all image values gets the caption text.
+                  // For single value make it an array with one value.
                   $text_field_rendered = array($text_field_rendered);
                 }
                 if (!empty($text_field_rendered[$i])) {
+                  // Use image index also with multi-value text field, if available.
                   $caption_text = $text_field_rendered[$i];
+                } else {
+                  // Otherwise, use single-value text field for all images.
+                  $caption_text = $text_field_rendered[0];
                 }
               }
           }
